@@ -22,4 +22,4 @@ jobs:
           # Password generated from Theme Access app
           SHOPIFY_CLI_THEME_TOKEN: "shptka_471712c9b9d0005765e7e31c5363ef77"
           SHOPIFY_CLI_TTY: 0
-        run: shopify theme push --path ./ --theme git-${{ env.GITHUB_HEAD_REF_SLUG_URL }}
+        run: shopify theme push --path ./
