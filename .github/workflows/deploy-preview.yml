@@ -20,8 +20,8 @@ jobs:
       - name: Deploy
         env:
           # Store URL, like your-store.myshopify.com
-          SHOPIFY_FLAG_STORE: fozil-dev-store.myshopify.com
+          SHOPIFY_FLAG_STORE: "fozil-dev-store.myshopify.com"
           # Password generated from Theme Access app
           SHOPIFY_CLI_THEME_TOKEN: shptka_471712c9b9d0005765e7e31c5363ef77
           SHOPIFY_CLI_TTY: 0
-        run: shopify theme push --path ./ --theme 159045976339
+        run: shopify theme push --path ./ --theme live-theme
