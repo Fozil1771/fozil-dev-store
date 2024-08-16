@@ -3,17 +3,17 @@ name: Sync Release Branch
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   sync-release:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout main branch
+      - name: Checkout master branch
         uses: actions/checkout@v3
         with:
-          ref: main
+          ref: master
 
       - name: Set up Git
         run: |
@@ -27,7 +27,7 @@ jobs:
 
       - name: Merge main into release branch
         run: |
-          git merge origin/main --no-edit
+          git merge origin/master --no-edit
 
       - name: Push changes
         run: |
