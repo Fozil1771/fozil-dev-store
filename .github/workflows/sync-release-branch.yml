@@ -2,34 +2,29 @@ name: Sync Release Branch
 
 on:
   push:
-    branches:
-      - master
+    branches: [master]
+    
+permissions: write-all
 
 jobs:
-  sync-release:
+  sync:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout master branch
+      - name: Checkout
         uses: actions/checkout@v3
         with:
-          ref: master
           fetch-depth: 0
 
-      - name: Set up Git
+      - name: Setup Git User
         run: |
-          git config --global user.name "Fozil Zayniddinov"
-          git config --global user.email "fozilzayniddinov7777@gmail.com"
+          git config user.name "Fozil Zayniddinov"
+          git config user.email "fozilzayniddinov7777@gmail.com"
 
-      - name: Checkout release branch
+      - name: Update Release Branch
         run: |
+          git checkout master
           git fetch origin
-          git checkout release || git checkout -b release
-
-      - name: Merge main into release branch
-        run: |
+          git checkout release
+          git pull
           git merge origin/master
-
-      - name: Push changes
-        run: |
           git push origin release
