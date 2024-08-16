@@ -28,7 +28,7 @@ jobs:
 
       - name: Merge main into release branch
         run: |
-          git merge origin/master --no-edit
+          git merge origin/master
 
       - name: Push changes
         run: |
