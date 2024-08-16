@@ -24,7 +24,7 @@ jobs:
         run: |
           git checkout master
           git fetch origin
-          git checkout release
+          git checkout release || git checkout -b release
           git pull
           git merge origin/master
           git push origin release
