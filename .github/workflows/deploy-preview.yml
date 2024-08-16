@@ -1,31 +1,34 @@
-name: Theme deploy
+name: Sync Release Branch
 
-on: [push]
-
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: false
+on:
+  push:
+    branches:
+      - main
 
 jobs:
-  deploy:
-    name: Deploy
+  sync-release:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - name: Checkout main branch
+        uses: actions/checkout@v3
         with:
-          node-version: 18
-      - uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: 3.1
-          bundler: "latest"
-      - name: Install Shopify CLI
-        run: npm install -g @shopify/cli @shopify/theme
-      - name: Deploy
-        env:
-          # Store URL, like your-store.myshopify.com
-          SHOPIFY_FLAG_STORE: "fozil-dev-store.myshopify.com"
-          # Password generated from Theme Access app
-          SHOPIFY_CLI_THEME_TOKEN: shptka_471712c9b9d0005765e7e31c5363ef77
-          SHOPIFY_CLI_TTY: 0
-        run: shopify theme push --path ./ --theme dev-theme
+          ref: main
+
+      - name: Set up Git
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+
+      - name: Checkout release branch
+        run: |
+          git fetch origin
+          git checkout release || git checkout -b release
+
+      - name: Merge main into release branch
+        run: |
+          git merge origin/main --no-edit
+
+      - name: Push changes
+        run: |
+          git push origin release
