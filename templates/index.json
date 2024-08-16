@@ -15,8 +15,8 @@
         "template--18309637636369__6a3bb789-ce10-45f5-ae67-e2063ef8c76b-168016437761699a6e-0": {
           "type": "heading",
           "settings": {
-            "heading": "This is GITHUB Actions",
-            "heading_size": "h1"
+            "heading": "GITHUB Actions",
+            "heading_size": "h0"
           }
         },
         "template--18309637636369__6a3bb789-ce10-45f5-ae67-e2063ef8c76b-168016437761699a6e-1": {
