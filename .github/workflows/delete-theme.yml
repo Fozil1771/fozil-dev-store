@@ -25,9 +25,9 @@ jobs:
 
       - name: Delete Shopify Theme
         env:
-          SHOPIFY_API_KEY: 3b84a26433f05739dd638ecffea21eb8
-          SHOPIFY_API_PASSWORD: 1e6c37163f1482260541f9d853e874c5
-          SHOPIFY_STORE_URL: fozil-dev-store.myshopify.com
+          SHOPIFY_API_KEY: ${{ secrets.SHOPIFY_API_KEY }}
+          SHOPIFY_API_PASSWORD: ${{ secrets.SHOPIFY_API_PASSWORD }}
+          SHOPIFY_STORE_URL: ${{ secrets.SHOPIFY_STORE_URL }}
         run: |
           # Fetch the branch name
           BRANCH_NAME=$(echo ${{ github.ref }} | sed 's/refs\/heads\///')
