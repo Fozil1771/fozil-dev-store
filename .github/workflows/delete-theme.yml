@@ -1,0 +1,48 @@
+name: Delete Shopify Theme
+
+on:
+  push:
+    branches:
+      - main
+      - release
+
+jobs:
+  delete-theme:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.event.ref == 'refs/heads/main' || github.event.ref == 'refs/heads/release'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "14"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Delete Shopify Theme
+        env:
+          SHOPIFY_API_KEY: ${{ secrets.SHOPIFY_API_KEY }}
+          SHOPIFY_API_PASSWORD: ${{ secrets.SHOPIFY_API_PASSWORD }}
+          SHOPIFY_STORE_URL: ${{ secrets.SHOPIFY_STORE_URL }}
+        run: |
+          # Fetch the branch name
+          BRANCH_NAME=$(echo ${{ github.ref }} | sed 's/refs\/heads\///')
+
+          # Replace with your logic to find the theme ID based on the branch name
+          # Example: Use the branch name to identify the theme ID
+
+          THEME_ID=$(curl -s -X GET "https://${SHOPIFY_API_KEY}:${SHOPIFY_API_PASSWORD}@${SHOPIFY_STORE_URL}/admin/api/2023-07/themes.json" \
+            | jq '.themes[] | select(.name | contains("'"${BRANCH_NAME}"'")) | .id')
+
+          if [ -z "$THEME_ID" ]; then
+            echo "No theme found for branch ${BRANCH_NAME}. Exiting."
+            exit 1
+          fi
+
+          echo "Deleting theme with ID ${THEME_ID} for branch ${BRANCH_NAME}."
+
+          curl -s -X DELETE "https://${SHOPIFY_API_KEY}:${SHOPIFY_API_PASSWORD}@${SHOPIFY_STORE_URL}/admin/api/2023-07/themes/${THEME_ID}.json"
