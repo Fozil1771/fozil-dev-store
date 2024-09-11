@@ -5,7 +5,7 @@ on:
     types: [closed]
     branches:
       - release
-      - master # Include master branch as well
+      - master
 
 jobs:
   cleanup:
@@ -28,10 +28,16 @@ jobs:
         run: |
           git push origin --delete ${{ github.event.pull_request.head.ref }}
 
+      - name: Install dependencies (Linuxbrew)
+        run: |
+          sudo apt-get install build-essential curl file git
+          sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"
+
       - name: Set up Shopify CLI
         run: |
-          curl -s https://shopify.dev/cli/install | bash
-          shopify login --api-key ${{ secrets.SHOPIFY_API_KEY }} --password ${{ secrets.SHOPIFY_API_PASSWORD }}
+          brew tap shopify/shopify
+          brew install shopify-cli
+          shopify login --api-key ${{ secrets.SHOPIFY_API_KEY }} --password ${{ secrets.SHOPIFY_PASSWORD }}
 
       - name: Get the theme corresponding to the branch
         run: |
