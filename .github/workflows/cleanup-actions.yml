@@ -1,0 +1,43 @@
+name: Cleanup Merged Branches and Shopify Themes
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - release
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Configure git
+        run: |
+          git config --global user.email "fozilzayniddinov7777@gmail.com"
+          git config --global user.name "Fozil Zayniddinov"
+
+      - name: Get the branch name
+        run: echo "BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/})" >> $GITHUB_ENV
+
+      - name: Delete merged branch
+        if: env.BRANCH_NAME != 'release'
+        run: |
+          git push origin --delete ${{ github.event.pull_request.head.ref }}
+
+      - name: Set up Shopify CLI
+        run: |
+          curl -s https://shopify.dev/cli/install | bash
+          shopify login --api-key ${{ secrets.SHOPIFY_API_KEY }} --password ${{ secrets.SHOPIFY_PASSWORD }}
+
+      - name: Get the theme corresponding to the branch
+        run: |
+          THEME_NAME=${{ github.event.pull_request.head.ref }}
+          THEME_ID=$(shopify theme list --json | jq -r ".[] | select(.name == \"$THEME_NAME\") | .id")
+
+      - name: Delete Shopify theme
+        if: env.THEME_ID != ''
+        run: |
+          shopify theme delete $THEME_ID
