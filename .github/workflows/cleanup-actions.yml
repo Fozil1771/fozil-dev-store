@@ -28,15 +28,14 @@ jobs:
         run: |
           git push origin --delete ${{ github.event.pull_request.head.ref }}
 
-      - name: Install dependencies (Linuxbrew)
+      - name: Install dependencies
         run: |
-          sudo apt-get install build-essential curl file git
-          sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"
+          sudo apt-get update
+          sudo apt-get install -y ruby-full build-essential
+          gem install shopify-cli
 
-      - name: Set up Shopify CLI
+      - name: Authenticate Shopify CLI
         run: |
-          brew tap shopify/shopify
-          brew install shopify-cli
           shopify login --api-key ${{ secrets.SHOPIFY_API_KEY }} --password ${{ secrets.SHOPIFY_API_PASSWORD }}
 
       - name: Get the theme corresponding to the branch
