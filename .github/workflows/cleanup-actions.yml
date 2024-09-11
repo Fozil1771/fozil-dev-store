@@ -5,6 +5,7 @@ on:
     types: [closed]
     branches:
       - release
+      - master
 
 jobs:
   cleanup:
