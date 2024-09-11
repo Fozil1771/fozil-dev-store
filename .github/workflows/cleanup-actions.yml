@@ -5,7 +5,7 @@ on:
     types: [closed]
     branches:
       - release
-      - master
+      - master # Include master branch as well
 
 jobs:
   cleanup:
@@ -24,7 +24,7 @@ jobs:
         run: echo "BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/})" >> $GITHUB_ENV
 
       - name: Delete merged branch
-        if: env.BRANCH_NAME != 'release'
+        if: env.BRANCH_NAME != 'release' && env.BRANCH_NAME != 'master'
         run: |
           git push origin --delete ${{ github.event.pull_request.head.ref }}
 
